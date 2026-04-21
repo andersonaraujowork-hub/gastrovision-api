@@ -6,10 +6,10 @@ services:
       - "3306:3306"
 
     environment:
-      - MYSQL_USER=gastrovision
-      - MYSQL_PASSWORD=gstdb2026
-      - MYSQL_DATABASE=db_gastrovision
-      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
     volumes:
       - mysql_data:/var/lib/mysql
       - "./conf.d:/etc/mysql/conf.d:ro"
