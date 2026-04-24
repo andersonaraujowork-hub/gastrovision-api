@@ -6,6 +6,7 @@ import org.springframework.jdbc.core.simple.JdbcClient;
 import org.springframework.stereotype.Repository;
 import java.util.List;
 import java.util.UUID;
+import java.util.Optional;
 
 @Repository
 public class UserRespositoryImp implements UserRepository {
@@ -68,6 +69,45 @@ public class UserRespositoryImp implements UserRepository {
                 .update();
     }
 
+    @Override
+    public Integer delete(String userId) {
+        return this.jdbcClient
+            .sql("DELETE FROM tb_users WHERE id = :id")
+            .param("id", userId)
+            .update();
+    }
+
+    @Override
+    public Optional<User> findById(String userId){
+        return this.jdbcClient.sql("SELECT * FROM tb_users WHERE id = :id")
+        .param("id", userId)
+        .query((rs) -> {
+            if (rs.next()) {
+                var address = new Address();
+                address.setStreet(rs.getString("street"));
+                address.setNumber(rs.getString("number"));
+                address.setComplement(rs.getString("complement"));
+                address.setNeighborhood(rs.getString("neighborhood"));
+                address.setCity(rs.getString("city"));
+                address.setState(rs.getString("state"));
+                address.setZipCode(rs.getString("zip_code"));
+
+                var user = new User();
+                user.setId(UUID.fromString(rs.getString("id")));
+                user.setName(rs.getString("name"));
+                user.setEmail(rs.getString("email"));
+                user.setLogin(rs.getString("login"));
+                user.setPassword(rs.getString("password"));
+                user.setUserType(UserType.valueOf(rs.getString("user_type")));
+                user.setAddress(address);
+                user.setCreatedAt(rs.getObject("created_at", java.time.LocalDateTime.class));
+                user.setUpdatedAt(rs.getObject("updated_at", java.time.LocalDateTime.class));
+                return Optional.of(user);
+            } else {
+                return Optional.empty();
+            }
+        });
+    }
 
 
 }

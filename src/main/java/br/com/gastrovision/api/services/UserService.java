@@ -2,12 +2,10 @@ package br.com.gastrovision.api.services;
 
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
-
-import br.com.gastrovision.api.dtos.UserRequestDto;
-import br.com.gastrovision.api.entity.Address;
 import br.com.gastrovision.api.entity.User;
 import br.com.gastrovision.api.repositories.UserRepository;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserService {
@@ -28,5 +26,12 @@ public class UserService {
         Assert.state( save == 1,  "Erro ao salvar usuário "+user.getName());
     }
 
-     
+    public void deleteUser(String userId){
+        var delete = this.userRepository.delete(userId);
+        Assert.state( delete == 1,  "Erro ao deletar usuário "+userId);
+    }
+
+    public Optional<User> findById(String userId){
+        return this.userRepository.findById(userId);
+    }
 }

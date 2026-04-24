@@ -35,6 +35,16 @@ public class UserController {
 
     @GetMapping("/{userid}")
     public ResponseEntity<User> getUserById(@PathVariable("userid") String userId) {
-        return ResponseEntity.notFound().build();
+        return userService.findById(userId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
+
+    @DeleteMapping("/{userid}")
+    public ResponseEntity<Void> deleteUser(@PathVariable("userid") String userId) {
+        userService.deleteUser(userId);
+        return ResponseEntity.noContent().build();
+    }
+
+    
 }

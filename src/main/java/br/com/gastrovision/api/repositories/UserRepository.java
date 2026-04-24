@@ -1,6 +1,7 @@
 package br.com.gastrovision.api.repositories;
 import br.com.gastrovision.api.entity.User;
-import java.util.List;
+import java.util.List;  
+import java.util.Optional;
 
 
 public interface UserRepository {
@@ -8,6 +9,10 @@ public interface UserRepository {
 
     List<User> findAll(int size, int offset);
 
-     Integer save(User user);
+    Integer save(User user);
+
+    Integer delete(String userId);
+
+    Optional<User> findById(String userId);
 
 }

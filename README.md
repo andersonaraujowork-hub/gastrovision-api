@@ -17,8 +17,8 @@ Sistema de gestão compartilhada para redes de restaurantes — Pós-Tech FIAP A
 src/main/java/br/com/gastrovision/api/
 ├── controllers/       # Endpoints REST
 ├── dtos/              # Objetos de entrada (request)
-├── entity/            # Entidades JPA
-├── repositories/      # Interface e implementação de acesso ao banco
+├── entity/            # Entidades e enums
+├── repositories/      # Interface e implementação com JdbcClient
 └── services/          # Regras de negócio
 ```
 
@@ -37,7 +37,7 @@ cd gastrovision-api
 
 ### 2. Configurar variáveis de ambiente
 
-Crie um arquivo `.env` na raiz do projeto com o seguinte conteúdo:
+Crie um arquivo `.env` na raiz do projeto:
 
 ```env
 # MySQL
@@ -64,9 +64,7 @@ A API estará disponível em `http://localhost:8080`.
 
 ## Endpoints
 
-### Usuários
-
-#### Criar usuário
+### Criar usuário
 ```
 POST /users
 ```
@@ -95,7 +93,7 @@ Resposta: `201 Created`
 
 ---
 
-#### Listar usuários
+### Listar usuários
 ```
 GET /users?page=1&size=10
 ```
@@ -126,9 +124,18 @@ Resposta: `200 OK`
 
 ---
 
-#### Buscar usuário por ID
+### Buscar usuário por ID
 ```
 GET /users/{id}
+```
+
+Resposta: `200 OK` ou `404 Not Found`
+
+---
+
+### Deletar usuário
+```
+DELETE /users/{id}
 ```
 
 Resposta: `200 OK` ou `404 Not Found`
@@ -176,4 +183,4 @@ O arquivo `gastrovision-api.postman_collection.json` está na raiz do repositór
 
 ## Status
 
-Em desenvolvimento — Fase 1 (módulo de usuários)
+🚧 Em desenvolvimento — Fase 1 (módulo de usuários)
