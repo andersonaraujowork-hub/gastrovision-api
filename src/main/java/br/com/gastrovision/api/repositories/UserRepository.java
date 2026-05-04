@@ -16,5 +16,7 @@ public interface UserRepository {
     Optional<User> findById(String userId);
 
     Integer update(String userId, User user);
+    // adiciona service para buscar pelo nome 
+    List<User> findByName(String name);
 
 }

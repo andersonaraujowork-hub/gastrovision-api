@@ -51,4 +51,12 @@ public class UserController {
         userService.updateUser(userId, user);
         return ResponseEntity.noContent().build();
     }
+
+// Endpoint para buscar usuarios pelo seu nome
+   @GetMapping("/search")
+    public ResponseEntity<List<User>> findByName(@RequestParam("name") String name) {
+    List<User> users = userService.findByName(name);
+    return ResponseEntity.ok(users);
+    }
 }
+

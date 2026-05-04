@@ -131,4 +131,36 @@ public class UserRespositoryImp implements UserRepository {
     }
 
 
+    
+    @Override
+    public List<User> findByName(String name) {
+        return this.jdbcClient
+            .sql("SELECT * FROM tb_users WHERE name LIKE CONCAT('%', :name, '%')")
+            .param("name", name)
+            .query((rs, rowNum) -> {
+                var address = new Address();
+                address.setStreet(rs.getString("street"));
+                address.setNumber(rs.getString("number"));
+                address.setComplement(rs.getString("complement"));
+                address.setNeighborhood(rs.getString("neighborhood"));
+                address.setCity(rs.getString("city"));
+                address.setState(rs.getString("state"));
+                address.setZipCode(rs.getString("zip_code"));
+
+                var user = new User();
+                user.setId(UUID.fromString(rs.getString("id")));
+                user.setName(rs.getString("name"));
+                user.setEmail(rs.getString("email"));
+                user.setLogin(rs.getString("login"));
+                user.setPassword(rs.getString("password"));
+                user.setUserType(UserType.valueOf(rs.getString("user_type")));
+                user.setAddress(address);
+                user.setCreatedAt(rs.getObject("created_at", java.time.LocalDateTime.class));
+                user.setUpdatedAt(rs.getObject("updated_at", java.time.LocalDateTime.class));
+            return user;
+        })
+        .list();
+}
+
+
 }

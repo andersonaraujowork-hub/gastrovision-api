@@ -39,4 +39,8 @@ public class UserService {
         var updated = this.userRepository.update(userId, user);
         Assert.state(updated == 1, "Erro ao atualizar usuário " + userId);
     }
+    // Service para buscar usuario pelo nome
+    public List<User> findByName(String name) {
+        return this.userRepository.findByName(name);
+    }
 }
