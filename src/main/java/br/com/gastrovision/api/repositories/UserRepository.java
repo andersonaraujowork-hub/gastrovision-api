@@ -15,4 +15,6 @@ public interface UserRepository {
 
     Optional<User> findById(String userId);
 
+    Integer update(String userId, User user);
+
 }

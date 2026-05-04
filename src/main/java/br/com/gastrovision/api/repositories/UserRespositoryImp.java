@@ -78,6 +78,27 @@ public class UserRespositoryImp implements UserRepository {
     }
 
     @Override
+    public Integer update(String userId, User user) {
+        return this.jdbcClient
+                .sql("UPDATE tb_users SET name = :name, email = :email, login = :login, password = :password, user_type = :userType, street = :street, number = :number, complement = :complement, neighborhood = :neighborhood, city = :city, state = :state, zip_code = :zipCode, updated_at = :updatedAt WHERE id = :id")
+                .param("id", userId)
+                .param("name", user.getName())
+                .param("email", user.getEmail())
+                .param("login", user.getLogin())
+                .param("password", user.getPassword())
+                .param("userType", user.getUserType().name())
+                .param("street", user.getAddress().getStreet())
+                .param("number", user.getAddress().getNumber())
+                .param("complement", user.getAddress().getComplement())
+                .param("neighborhood", user.getAddress().getNeighborhood())
+                .param("city", user.getAddress().getCity())
+                .param("state", user.getAddress().getState())
+                .param("zipCode", user.getAddress().getZipCode())
+                .param("updatedAt", java.time.LocalDateTime.now())
+                .update();
+    }
+
+    @Override
     public Optional<User> findById(String userId){
         return this.jdbcClient.sql("SELECT * FROM tb_users WHERE id = :id")
         .param("id", userId)

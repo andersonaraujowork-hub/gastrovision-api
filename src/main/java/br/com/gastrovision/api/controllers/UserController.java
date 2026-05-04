@@ -9,7 +9,7 @@ import br.com.gastrovision.api.services.UserService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/api/v1/users")
 public class UserController {
 
     private final UserService userService;
@@ -46,5 +46,9 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    
+    @PutMapping("/{userid}")
+    public ResponseEntity<Void> updateUser(@PathVariable("userid") String userId, @RequestBody User user) {
+        userService.updateUser(userId, user);
+        return ResponseEntity.noContent().build();
+    }
 }

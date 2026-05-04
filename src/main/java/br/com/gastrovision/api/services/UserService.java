@@ -34,4 +34,9 @@ public class UserService {
     public Optional<User> findById(String userId){
         return this.userRepository.findById(userId);
     }
+
+    public void updateUser(String userId, User user){
+        var updated = this.userRepository.update(userId, user);
+        Assert.state(updated == 1, "Erro ao atualizar usuário " + userId);
+    }
 }
