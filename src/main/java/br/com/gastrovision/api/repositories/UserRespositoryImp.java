@@ -196,4 +196,17 @@ public class UserRespositoryImp implements UserRepository {
         });
     }
 
+
+    @Override
+    public Integer updatePassword(String userId, String newPassword) {
+        return this.jdbcClient
+            .sql("UPDATE tb_users SET password = :password, updated_at = :updatedAt WHERE id = :id")
+            .param("id", userId)
+            .param("password", newPassword)
+            .param("updatedAt", java.time.LocalDateTime.now())
+            .update();
+    }
+
+
+
 }

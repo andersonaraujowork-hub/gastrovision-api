@@ -1,0 +1,12 @@
+C:\Users\ander\IdeaProjects\gastrovision-api\src\main\java\br\com\gastrovision\api\controllers\UserController.java
+C:\Users\ander\IdeaProjects\gastrovision-api\src\main\java\br\com\gastrovision\api\dtos\AddressDto.java
+C:\Users\ander\IdeaProjects\gastrovision-api\src\main\java\br\com\gastrovision\api\dtos\LoginRequestDto.java
+C:\Users\ander\IdeaProjects\gastrovision-api\src\main\java\br\com\gastrovision\api\dtos\PasswordUpdateDto.java
+C:\Users\ander\IdeaProjects\gastrovision-api\src\main\java\br\com\gastrovision\api\dtos\UserRequestDto.java
+C:\Users\ander\IdeaProjects\gastrovision-api\src\main\java\br\com\gastrovision\api\entity\Address.java
+C:\Users\ander\IdeaProjects\gastrovision-api\src\main\java\br\com\gastrovision\api\entity\User.java
+C:\Users\ander\IdeaProjects\gastrovision-api\src\main\java\br\com\gastrovision\api\entity\UserType.java
+C:\Users\ander\IdeaProjects\gastrovision-api\src\main\java\br\com\gastrovision\api\GastrovisionApiApplication.java
+C:\Users\ander\IdeaProjects\gastrovision-api\src\main\java\br\com\gastrovision\api\repositories\UserRepository.java
+C:\Users\ander\IdeaProjects\gastrovision-api\src\main\java\br\com\gastrovision\api\repositories\UserRespositoryImp.java
+C:\Users\ander\IdeaProjects\gastrovision-api\src\main\java\br\com\gastrovision\api\services\UserService.java

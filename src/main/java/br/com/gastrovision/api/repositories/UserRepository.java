@@ -21,5 +21,8 @@ public interface UserRepository {
 
     // busca usuario pelo login e senha para validar autenticacao
     Optional<User> findByLoginAndPassword(String login, String password);
+    // service para atualizar senha do usuario
+    Integer updatePassword(String userId, String newPassword);
+
 
 }

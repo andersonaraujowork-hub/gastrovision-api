@@ -2,6 +2,8 @@ package br.com.gastrovision.api.services;
 
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+
+import br.com.gastrovision.api.dtos.PasswordUpdateDto;
 import br.com.gastrovision.api.entity.User;
 import br.com.gastrovision.api.repositories.UserRepository;
 import java.util.List;
@@ -48,4 +50,11 @@ public class UserService {
     public Optional<User> login(String login, String password) {
         return this.userRepository.findByLoginAndPassword(login, password);
     }
+
+    //service para atualizar senha do usuario
+    public void updatePassword(String userId, PasswordUpdateDto dto) {
+    var updated = userRepository.updatePassword(userId, dto.newPassword());
+    Assert.state(updated == 1, "Erro ao atualizar senha do usuário " + userId);
+    }
+    
 }
