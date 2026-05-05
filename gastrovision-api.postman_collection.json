@@ -1,0 +1,130 @@
+{
+  "info": {
+    "_postman_id": "e400841f-6ea6-4c94-bd21-d8bf35cc22a5",
+    "name": "gastrovision-api",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53291122",
+    "_collection_link": "https://go.postman.co/collection/53291122-e400841f-6ea6-4c94-bd21-d8bf35cc22a5?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "POST users",
+      "request": {
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n  \"name\": \"Carlos Silva\",\r\n  \"email\": \"carlos@email.com\",\r\n  \"login\": \"carlos\",\r\n  \"password\": \"123456\",\r\n  \"userType\": \"CUSTOMER\",\r\n  \"address\": {\r\n    \"street\": \"Rua das Flores\",\r\n    \"number\": \"100\",\r\n    \"complement\": \"Apto 1\",\r\n    \"neighborhood\": \"Centro\",\r\n    \"city\": \"São Paulo\",\r\n    \"state\": \"SP\",\r\n    \"zipCode\": \"01001000\"\r\n  }\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://localhost:8080/api/v1/users",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "api",
+            "v1",
+            "users"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET users",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Delete User",
+      "request": {
+        "method": "DELETE",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "GET User",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://localhost:8080/users/b28aeccc-2fed-4b4a-9909-2362c4fd01e3",
+          "protocol": "http",
+          "host": [
+            "localhost"
+          ],
+          "port": "8080",
+          "path": [
+            "users",
+            "b28aeccc-2fed-4b4a-9909-2362c4fd01e3"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "PUT - Atualizar dados",
+      "request": {
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"João Silva\",\r\n    \"email\": \"joao@email.com\",\r\n    \"login\": \"joao\",\r\n    \"password\": \"senha123\",\r\n    \"userType\": \"ADMIN\",\r\n    \"address\": {\r\n      \"street\": \"Rua das Flores\",\r\n      \"number\": \"123\",\r\n      \"complement\": \"Apto 1\",\r\n      \"neighborhood\": \"Centro\",\r\n      \"city\": \"São Paulo\",\r\n      \"state\": \"SP\",\r\n      \"zipCode\": \"01310-100\"\r\n    }\r\n  }",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "PUT /api/v1/users/{userid}",
+          "host": [
+            "PUT "
+          ],
+          "path": [
+            "api",
+            "v1",
+            "users",
+            "{userid}"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get - por nome",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "PUT - Login",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "PATCH - Up password",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    }
+  ]
+}
