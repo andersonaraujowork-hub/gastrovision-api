@@ -1,0 +1,10 @@
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.pdf
+.env
+.claude/
+*.iml
+.idea/
