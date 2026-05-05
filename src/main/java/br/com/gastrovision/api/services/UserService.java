@@ -43,4 +43,9 @@ public class UserService {
     public List<User> findByName(String name) {
         return this.userRepository.findByName(name);
     }
+
+    // valida login e senha do usuario
+    public Optional<User> login(String login, String password) {
+        return this.userRepository.findByLoginAndPassword(login, password);
+    }
 }

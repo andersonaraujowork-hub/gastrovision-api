@@ -19,4 +19,7 @@ public interface UserRepository {
     // adiciona service para buscar pelo nome 
     List<User> findByName(String name);
 
+    // busca usuario pelo login e senha para validar autenticacao
+    Optional<User> findByLoginAndPassword(String login, String password);
+
 }

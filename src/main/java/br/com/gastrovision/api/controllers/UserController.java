@@ -3,6 +3,7 @@ package br.com.gastrovision.api.controllers;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import br.com.gastrovision.api.dtos.LoginRequestDto;
 import br.com.gastrovision.api.entity.User;
 import br.com.gastrovision.api.services.UserService;
 
@@ -57,6 +58,14 @@ public class UserController {
     public ResponseEntity<List<User>> findByName(@RequestParam("name") String name) {
     List<User> users = userService.findByName(name);
     return ResponseEntity.ok(users);
+    }
+
+// Endpoint para validar login do usuario
+    @PostMapping("/login")
+    public ResponseEntity<User> login(@RequestBody LoginRequestDto loginRequest) {
+        return userService.login(loginRequest.login(), loginRequest.password())
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.status(401).build());
     }
 }
 

@@ -162,5 +162,38 @@ public class UserRespositoryImp implements UserRepository {
         .list();
 }
 
+    // busca usuario pelo login e senha
+    @Override
+    public Optional<User> findByLoginAndPassword(String login, String password) {
+        return this.jdbcClient.sql("SELECT * FROM tb_users WHERE login = :login AND password = :password")
+        .param("login", login)
+        .param("password", password)
+        .query((rs) -> {
+            if (rs.next()) {
+                var address = new Address();
+                address.setStreet(rs.getString("street"));
+                address.setNumber(rs.getString("number"));
+                address.setComplement(rs.getString("complement"));
+                address.setNeighborhood(rs.getString("neighborhood"));
+                address.setCity(rs.getString("city"));
+                address.setState(rs.getString("state"));
+                address.setZipCode(rs.getString("zip_code"));
+
+                var user = new User();
+                user.setId(UUID.fromString(rs.getString("id")));
+                user.setName(rs.getString("name"));
+                user.setEmail(rs.getString("email"));
+                user.setLogin(rs.getString("login"));
+                user.setPassword(rs.getString("password"));
+                user.setUserType(UserType.valueOf(rs.getString("user_type")));
+                user.setAddress(address);
+                user.setCreatedAt(rs.getObject("created_at", java.time.LocalDateTime.class));
+                user.setUpdatedAt(rs.getObject("updated_at", java.time.LocalDateTime.class));
+                return Optional.of(user);
+            } else {
+                return Optional.empty();
+            }
+        });
+    }
 
 }
