@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<style>
+  body { font-family: Arial, sans-serif; font-size: 12pt; margin: 3cm 2.5cm; color: #000; }
+  h1 { font-size: 18pt; text-align: center; margin-bottom: 6pt; }
+  h2 { font-size: 14pt; margin-top: 24pt; margin-bottom: 6pt; border-bottom: 1px solid #000; padding-bottom: 3pt; }
+  h3 { font-size: 12pt; margin-top: 16pt; margin-bottom: 4pt; }
+  p { text-align: justify; line-height: 1.5; margin: 6pt 0; }
+  table { width: 100%; border-collapse: collapse; margin: 10pt 0; font-size: 11pt; }
+  th { background-color: #333; color: #fff; padding: 6pt 8pt; text-align: left; }
+  td { border: 1px solid #aaa; padding: 5pt 8pt; vertical-align: top; }
+  tr:nth-child(even) td { background-color: #f5f5f5; }
+  code { font-family: Courier New, monospace; font-size: 10pt; background: #f0f0f0; padding: 1pt 4pt; }
+  pre { font-family: Courier New, monospace; font-size: 10pt; background: #f0f0f0; padding: 10pt; border: 1px solid #ccc; overflow-x: auto; white-space: pre-wrap; }
+  .capa { text-align: center; margin-top: 120pt; margin-bottom: 60pt; }
+  .capa h1 { font-size: 22pt; }
+  .capa p { font-size: 12pt; }
+  .nota { background: #fffbe6; border-left: 4px solid #f0a500; padding: 8pt 12pt; margin: 10pt 0; font-style: italic; }
+  ul li { margin: 4pt 0; line-height: 1.5; }
+</style>
+</head>
+<body>
+
+<!-- CAPA -->
+<div class="capa">
+  <p>POSTECH — Arquitetura e Desenvolvimento Java</p>
+  <h1>Relatório Técnico</h1>
+  <h1>Tech Challenge — Fase 1</h1>
+  <br><br>
+  <p><strong>Projeto:</strong> GastroVision API</p>
+  <p><strong>Grupo:</strong> 25</p>
+  <br>
+  <p><strong>Integrantes:</strong></p>
+  <p>Henrique Avelar Barba — hbarba01@gmail.com</p>
+  <p>Anderson Gonçalves de Araujo — anderson.araujo.work@gmail.com</p>
+  <br>
+  <p><strong>Data:</strong> Maio de 2026</p>
+  <p><strong>Repositório:</strong> https://github.com/andersonaraujowork-hub/gastrovision-api</p>
+</div>
+
+<hr>
+
+<!-- SUMÁRIO -->
+<h2>Sumário</h2>
+<ol>
+  <li>Descrição da Arquitetura</li>
+  <li>Modelagem das Entidades</li>
+  <li>Estrutura do Banco de Dados</li>
+  <li>Endpoints Disponíveis</li>
+  <li>Documentação Swagger</li>
+  <li>Coleção Postman</li>
+  <li>Execução com Docker Compose</li>
+</ol>
+
+<hr>
+
+<!-- 1. ARQUITETURA -->
+<h2>1. Descrição da Arquitetura</h2>
+
+<p>A GastroVision API é um sistema backend desenvolvido em <strong>Spring Boot 3</strong> com <strong>Java 21</strong>, seguindo uma arquitetura em camadas bem definida. O objetivo da Fase 1 é fornecer o gerenciamento completo de usuários do sistema de gestão de restaurantes.</p>
+
+<h3>Tecnologias Utilizadas</h3>
+<table>
+  <tr><th>Tecnologia</th><th>Versão</th><th>Finalidade</th></tr>
+  <tr><td>Java</td><td>21</td><td>Linguagem principal</td></tr>
+  <tr><td>Spring Boot</td><td>4.0.x</td><td>Framework base da aplicação</td></tr>
+  <tr><td>Spring JDBC (JdbcClient)</td><td>—</td><td>Acesso ao banco de dados com SQL nativo</td></tr>
+  <tr><td>Spring Data JPA / Hibernate</td><td>—</td><td>Mapeamento ORM e criação automática das tabelas</td></tr>
+  <tr><td>MySQL</td><td>8.0</td><td>Banco de dados relacional</td></tr>
+  <tr><td>Docker / Docker Compose</td><td>—</td><td>Containerização e orquestração</td></tr>
+  <tr><td>Springdoc OpenAPI (Swagger)</td><td>—</td><td>Documentação dos endpoints</td></tr>
+  <tr><td>Lombok</td><td>—</td><td>Redução de código boilerplate</td></tr>
+  <tr><td>Maven</td><td>3.9</td><td>Gerenciamento de dependências e build</td></tr>
+</table>
+
+<h3>Estrutura de Pacotes</h3>
+<pre>
+br.com.gastrovision.api
+├── controllers        → Camada de entrada HTTP (REST)
+├── services           → Regras de negócio
+├── repositories       → Interface de contrato do repositório
+│   └── UserRespositoryImp → Implementação com JdbcClient (SQL nativo)
+├── entity             → Entidades JPA (User, Address, UserType)
+└── dtos               → Objetos de transferência de dados
+    ├── LoginRequestDto
+    ├── PasswordUpdateDto
+    ├── UserRequestDto
+    └── AddressDto
+</pre>
+
+<h3>Fluxo das Requisições</h3>
+<p>Toda requisição HTTP passa pelas seguintes camadas:</p>
+<p><strong>HTTP Request → Controller → Service → Repository (JdbcClient) → MySQL → Response</strong></p>
+
+<ul>
+  <li><strong>Controller:</strong> recebe a requisição, valida o formato e delega ao Service.</li>
+  <li><strong>Service:</strong> aplica as regras de negócio e usa <code>Assert.state()</code> para validações críticas.</li>
+  <li><strong>Repository:</strong> executa SQL nativo via <code>JdbcClient</code>, sem uso de métodos derivados do Spring Data.</li>
+</ul>
+
+<h3>Versionamento de API</h3>
+<p>Todos os endpoints são prefixados com <code>/api/v1</code>, garantindo versionamento via URL conforme requisito do projeto.</p>
+
+<hr>
+
+<!-- 2. MODELAGEM -->
+<h2>2. Modelagem das Entidades</h2>
+
+<h3>Entidade User</h3>
+<p>Representa qualquer usuário do sistema. O campo <code>userType</code> determina se o usuário é dono de restaurante (<code>OWNER</code>) ou cliente (<code>CUSTOMER</code>).</p>
+
+<table>
+  <tr><th>Campo</th><th>Tipo Java</th><th>Descrição</th></tr>
+  <tr><td>id</td><td>UUID</td><td>Identificador único, gerado automaticamente</td></tr>
+  <tr><td>name</td><td>String</td><td>Nome completo do usuário</td></tr>
+  <tr><td>email</td><td>String</td><td>E-mail único no sistema</td></tr>
+  <tr><td>login</td><td>String</td><td>Login único para autenticação</td></tr>
+  <tr><td>password</td><td>String</td><td>Senha do usuário</td></tr>
+  <tr><td>address</td><td>Address (Embedded)</td><td>Endereço completo (objeto embutido)</td></tr>
+  <tr><td>userType</td><td>UserType (Enum)</td><td>OWNER ou CUSTOMER</td></tr>
+  <tr><td>createdAt</td><td>LocalDateTime</td><td>Data de criação (preenchida automaticamente)</td></tr>
+  <tr><td>updatedAt</td><td>LocalDateTime</td><td>Data da última alteração (atualizada automaticamente)</td></tr>
+</table>
+
+<h3>Entidade Address (Embeddable)</h3>
+<p>Embutida na entidade <code>User</code>, seus campos são persistidos na mesma tabela <code>tb_users</code>.</p>
+
+<table>
+  <tr><th>Campo</th><th>Tipo</th><th>Descrição</th></tr>
+  <tr><td>street</td><td>String</td><td>Nome da rua</td></tr>
+  <tr><td>number</td><td>String</td><td>Número do imóvel</td></tr>
+  <tr><td>complement</td><td>String</td><td>Complemento (apto, bloco, etc.)</td></tr>
+  <tr><td>neighborhood</td><td>String</td><td>Bairro</td></tr>
+  <tr><td>city</td><td>String</td><td>Cidade</td></tr>
+  <tr><td>state</td><td>String</td><td>Estado (sigla)</td></tr>
+  <tr><td>zipCode</td><td>String</td><td>CEP</td></tr>
+</table>
+
+<h3>Enum UserType</h3>
+<table>
+  <tr><th>Valor</th><th>Descrição</th></tr>
+  <tr><td>OWNER</td><td>Dono de restaurante</td></tr>
+  <tr><td>CUSTOMER</td><td>Cliente</td></tr>
+</table>
+
+<hr>
+
+<!-- 3. BANCO DE DADOS -->
+<h2>3. Estrutura do Banco de Dados</h2>
+
+<p>O banco utilizado é <strong>MySQL 8.0</strong>. A tabela é criada automaticamente pelo Hibernate com a configuração <code>ddl-auto: update</code>.</p>
+
+<h3>Tabela: tb_users</h3>
+<table>
+  <tr><th>Coluna</th><th>Tipo</th><th>Restrições</th></tr>
+  <tr><td>id</td><td>VARCHAR(36)</td><td>PRIMARY KEY</td></tr>
+  <tr><td>name</td><td>VARCHAR(255)</td><td>NOT NULL</td></tr>
+  <tr><td>email</td><td>VARCHAR(255)</td><td>NOT NULL, UNIQUE</td></tr>
+  <tr><td>login</td><td>VARCHAR(255)</td><td>NOT NULL, UNIQUE</td></tr>
+  <tr><td>password</td><td>VARCHAR(255)</td><td>NOT NULL</td></tr>
+  <tr><td>user_type</td><td>VARCHAR(20)</td><td>NOT NULL (OWNER ou CUSTOMER)</td></tr>
+  <tr><td>street</td><td>VARCHAR(255)</td><td>—</td></tr>
+  <tr><td>number</td><td>VARCHAR(20)</td><td>—</td></tr>
+  <tr><td>complement</td><td>VARCHAR(255)</td><td>—</td></tr>
+  <tr><td>neighborhood</td><td>VARCHAR(255)</td><td>—</td></tr>
+  <tr><td>city</td><td>VARCHAR(255)</td><td>—</td></tr>
+  <tr><td>state</td><td>VARCHAR(2)</td><td>—</td></tr>
+  <tr><td>zip_code</td><td>VARCHAR(10)</td><td>—</td></tr>
+  <tr><td>created_at</td><td>DATETIME</td><td>Preenchido na inserção</td></tr>
+  <tr><td>updated_at</td><td>DATETIME</td><td>Atualizado a cada alteração</td></tr>
+</table>
+
+<hr>
+
+<!-- 4. ENDPOINTS -->
+<h2>4. Endpoints Disponíveis</h2>
+
+<p>Base URL: <code>http://localhost:8080/api/v1</code></p>
+
+<table>
+  <tr><th>Método</th><th>Endpoint</th><th>Descrição</th><th>Status</th></tr>
+  <tr><td>GET</td><td>/users</td><td>Lista usuários paginados</td><td>200</td></tr>
+  <tr><td>POST</td><td>/users</td><td>Cria novo usuário</td><td>201</td></tr>
+  <tr><td>GET</td><td>/users/{userid}</td><td>Busca usuário por ID</td><td>200 / 404</td></tr>
+  <tr><td>PUT</td><td>/users/{userid}</td><td>Atualiza dados do usuário (exceto senha)</td><td>204</td></tr>
+  <tr><td>PATCH</td><td>/users/{userid}/password</td><td>Atualiza apenas a senha</td><td>204</td></tr>
+  <tr><td>DELETE</td><td>/users/{userid}</td><td>Remove o usuário</td><td>204</td></tr>
+  <tr><td>GET</td><td>/users/search?name=</td><td>Busca usuários pelo nome</td><td>200</td></tr>
+  <tr><td>POST</td><td>/users/login</td><td>Valida login e senha</td><td>200 / 401</td></tr>
+</table>
+
+<h3>POST /api/v1/users — Criar usuário</h3>
+<p><strong>Request Body:</strong></p>
+<pre>{
+  "name": "João Silva",
+  "email": "joao@email.com",
+  "login": "joao",
+  "password": "senha123",
+  "userType": "CUSTOMER",
+  "address": {
+    "street": "Rua das Flores",
+    "number": "123",
+    "complement": "Apto 1",
+    "neighborhood": "Centro",
+    "city": "São Paulo",
+    "state": "SP",
+    "zipCode": "01310-100"
+  }
+}</pre>
+<p><strong>Response:</strong> <code>201 Created</code> (sem corpo)</p>
+
+<h3>GET /api/v1/users?page=1&amp;size=10 — Listar usuários</h3>
+<p><strong>Response 200:</strong></p>
+<pre>[
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "name": "João Silva",
+    "email": "joao@email.com",
+    "login": "joao",
+    "userType": "CUSTOMER",
+    "address": { ... },
+    "createdAt": "2026-05-04T18:00:00",
+    "updatedAt": "2026-05-04T18:00:00"
+  }
+]</pre>
+
+<h3>PUT /api/v1/users/{userid} — Atualizar dados (exceto senha)</h3>
+<p><strong>Request Body:</strong> mesmo formato do POST.</p>
+<p><strong>Response:</strong> <code>204 No Content</code></p>
+
+<h3>PATCH /api/v1/users/{userid}/password — Trocar senha</h3>
+<p><strong>Request Body:</strong></p>
+<pre>{
+  "newPassword": "novaSenha456"
+}</pre>
+<p><strong>Response:</strong> <code>204 No Content</code></p>
+
+<h3>POST /api/v1/users/login — Validar login</h3>
+<p><strong>Request Body:</strong></p>
+<pre>{
+  "login": "joao",
+  "password": "senha123"
+}</pre>
+<p><strong>Response 200:</strong> dados completos do usuário.</p>
+<p><strong>Response 401:</strong> login ou senha inválidos.</p>
+
+<h3>GET /api/v1/users/search?name=João — Buscar por nome</h3>
+<p><strong>Response 200:</strong> lista de usuários cujo nome contém o termo informado.</p>
+
+<hr>
+
+<!-- 5. SWAGGER -->
+<h2>5. Documentação Swagger</h2>
+
+<p>A API utiliza <strong>Springdoc OpenAPI</strong> para documentação automática dos endpoints. A interface está disponível em:</p>
+<p><code>http://localhost:8080/swagger-ui.html</code></p>
+
+<p>Todos os endpoints estão anotados com <code>@Operation</code>, <code>@ApiResponse</code> e <code>@Tag</code>, exibindo:</p>
+<ul>
+  <li>Descrição de cada endpoint;</li>
+  <li>Códigos de resposta esperados (200, 201, 204, 401, 404);</li>
+  <li>Modelos de requisição e resposta.</li>
+</ul>
+
+<div class="nota">
+  [INSERIR PRINT DA TELA DO SWAGGER-UI AQUI — acesse http://localhost:8080/swagger-ui.html após subir a aplicação]
+</div>
+
+<hr>
+
+<!-- 6. POSTMAN -->
+<h2>6. Coleção Postman</h2>
+
+<p>A coleção Postman está disponível no repositório no arquivo <code>gastrovision-api.postman_collection.json</code>. Ela cobre os seguintes cenários:</p>
+
+<table>
+  <tr><th>Cenário</th><th>Método</th><th>Endpoint</th></tr>
+  <tr><td>Cadastro de usuário válido</td><td>POST</td><td>/api/v1/users</td></tr>
+  <tr><td>Cadastro com e-mail duplicado</td><td>POST</td><td>/api/v1/users</td></tr>
+  <tr><td>Buscar usuário por ID</td><td>GET</td><td>/api/v1/users/{id}</td></tr>
+  <tr><td>Atualizar dados do usuário</td><td>PUT</td><td>/api/v1/users/{id}</td></tr>
+  <tr><td>Trocar senha</td><td>PATCH</td><td>/api/v1/users/{id}/password</td></tr>
+  <tr><td>Buscar usuários por nome</td><td>GET</td><td>/api/v1/users/search?name=</td></tr>
+  <tr><td>Validação de login — sucesso</td><td>POST</td><td>/api/v1/users/login</td></tr>
+  <tr><td>Validação de login — falha</td><td>POST</td><td>/api/v1/users/login</td></tr>
+  <tr><td>Deletar usuário</td><td>DELETE</td><td>/api/v1/users/{id}</td></tr>
+</table>
+
+<div class="nota">
+  [INSERIR PRINTS DAS REQUISIÇÕES NO POSTMAN AQUI]
+</div>
+
+<hr>
+
+<!-- 7. DOCKER -->
+<h2>7. Execução com Docker Compose</h2>
+
+<h3>Pré-requisitos</h3>
+<ul>
+  <li>Docker Desktop instalado e em execução;</li>
+  <li>Arquivo <code>.env</code> configurado na raiz do projeto.</li>
+</ul>
+
+<h3>Configuração do arquivo .env</h3>
+<p>Crie um arquivo <code>.env</code> na raiz do projeto com as seguintes variáveis:</p>
+<pre>
+MYSQL_USER=gastro
+MYSQL_PASSWORD=gastro123
+MYSQL_DATABASE=db_gastrovision
+MYSQL_ROOT_PASSWORD=root123
+</pre>
+
+<h3>Subindo a aplicação</h3>
+<p>Execute o comando abaixo na raiz do projeto:</p>
+<pre>docker-compose up --build</pre>
+
+<p>O Docker Compose irá:</p>
+<ol>
+  <li>Baixar a imagem do MySQL 8.0;</li>
+  <li>Fazer o build da aplicação Spring Boot via Dockerfile multi-stage (Maven + JRE Alpine);</li>
+  <li>Aguardar o MySQL ficar saudável (healthcheck) antes de iniciar a aplicação;</li>
+  <li>Criar automaticamente o banco <code>db_gastrovision</code> e a tabela <code>tb_users</code>.</li>
+</ol>
+
+<h3>Portas expostas</h3>
+<table>
+  <tr><th>Serviço</th><th>Porta</th></tr>
+  <tr><td>API (Spring Boot)</td><td>8080</td></tr>
+  <tr><td>MySQL</td><td>3306</td></tr>
+</table>
+
+<h3>Verificando o funcionamento</h3>
+<p>Após subir, acesse:</p>
+<ul>
+  <li>API: <code>http://localhost:8080/api/v1/users?page=1&amp;size=10</code></li>
+  <li>Swagger: <code>http://localhost:8080/swagger-ui.html</code></li>
+</ul>
+
+<h3>Parando a aplicação</h3>
+<pre>docker-compose down</pre>
+
+<hr>
+<p style="text-align:center; font-size:10pt; color:#666;">GastroVision API — Tech Challenge Fase 1 — POSTECH 2026</p>
+
+</body>
+</html>
